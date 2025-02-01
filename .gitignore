@@ -1,0 +1,32 @@
+# Ignore Foundry build artifacts
+out/
+cache/
+
+# Ignore Foundry test artifacts
+broadcast/
+forge-artifacts/
+
+# Ignore environment-specific files
+.env
+.env.local
+.env.*.local
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+
+# Ignore node_modules (if you're using JavaScript/TypeScript tooling)
+node_modules/
+
+# Ignore local development files
+*.log
+*.tmp
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore Windows specific files
+Thumbs.db
+
+# Ignore any local configuration files
+foundry.toml.local
