@@ -4,7 +4,7 @@ Welcome to the LinguaChain MVP Development repository! LinguaChain is a decentra
 
 ## Project Overview
 
-LinguaChain empowers users to collaboratively evolve an artificial language by proposing, voting on, and implementing changes. The integration of ElizaOS plays a central role in this process, providing an AI-powered agent that assists users in creating new symbols, words, and rules. This framework ensures a seamless and intuitive experience, even for non-technical users, while maintaining transparency and decentralization through blockchain-based governance.
+LinguaChain empowers users to collaboratively evolve an artificial language by proposing, voting on, and implementing changes. The integration of ElizaOS plays a central role in this process, providing an AI-powered agent that assists users in creating new symbols, words, and rules. This framework ensures an intuitive experience, even for non-technical users, while maintaining transparency and decentralization through blockchain-based governance.
 
 ## Key Features
 
@@ -22,7 +22,7 @@ LinguaChain empowers users to collaboratively evolve an artificial language by p
 3. Language Database
 
 **Structured Storage**: A robust database schema stores words, symbols, and rules, with versioning support for rollback in case of disputes.<br>
-**API Access**: An API enables seamless reading and writing of linguistic data, ensuring consistency with blockchain governance decisions.
+**API Access**: An API enables easy reading and writing of linguistic data, ensuring consistency with blockchain governance decisions.
 
 4. User Interface
 
