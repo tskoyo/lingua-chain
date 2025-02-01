@@ -16,20 +16,20 @@ LinguaChain empowers users to collaboratively evolve an artificial language by p
 
 2. DAO Governance
 
-**Decentralized Voting**: A DAO structure allows participants to vote on proposed changes using the LinguaChain Token (LCT).
+**Decentralized Voting**: A DAO structure allows participants to vote on proposed changes using the LinguaChain Token (LCT).<br>
 **Transparent Decision-Making**: All proposals and voting results are recorded on the blockchain, ensuring transparency and trust in the governance process.
 
 3. Language Database
 
-**Structured Storage**: A robust database schema stores words, symbols, and rules, with versioning support for rollback in case of disputes.
+**Structured Storage**: A robust database schema stores words, symbols, and rules, with versioning support for rollback in case of disputes.<br>
 **API Access**: An API enables seamless reading and writing of linguistic data, ensuring consistency with blockchain governance decisions.
 
 4. User Interface
 
-**Intuitive Design**: A user-friendly interface allows users to submit proposals, vote on changes, and view past proposals and results.
+**Intuitive Design**: A user-friendly interface allows users to submit proposals, vote on changes, and view past proposals and results.<br>
 **Token-Based Staking**: Users can stake LCT tokens to participate in voting, ensuring active and engaged governance.
 
 5. Smart Contract & Token Mechanics
 
-**LinguaChain Token (LCT)**: The native token facilitates voting and rewards for accepted proposals.
+**LinguaChain Token (LCT)**: The native token facilitates voting and rewards for accepted proposals.<br>
 **Staking Mechanism**: Users stake LCT tokens to participate in governance, with rewards distributed for successful proposals.
