@@ -1,0 +1,4 @@
+RPC_URL= # Anvil RPC url, for example
+PRIVATE_KEY=
+CONTRACT_ADDRESS=
+CONTRACT_ABI_PATH=

@@ -11,6 +11,8 @@ forge-artifacts/
 .env.local
 .env.*.local
 
+app/.env
+
 # Ignore IDE-specific files
 .vscode/
 .idea/
