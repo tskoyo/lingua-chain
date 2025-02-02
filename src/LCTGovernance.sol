@@ -23,11 +23,7 @@ contract LCTGovernance {
     mapping(uint256 => mapping(address => bool)) public hasVoted;
 
     event ProposalCreated(uint256 indexed proposalId, address proposer);
-    event VoteCast(
-        uint256 indexed proposalId,
-        address indexed voter,
-        bool support
-    );
+    event VoteCast(uint256 indexed proposalId, address indexed voter, bool support);
     event TokensStaked(address indexed user, uint256 amount);
     event TokensUnstaked(address indexed user, uint256 amount);
 
@@ -44,10 +40,7 @@ contract LCTGovernance {
     }
 
     function unstakeTokens(uint256 _amount) external {
-        require(
-            _amount <= stakedBalances[msg.sender],
-            "Insufficient staked balance"
-        );
+        require(_amount <= stakedBalances[msg.sender], "Insufficient staked balance");
         stakedBalances[msg.sender] -= _amount;
         governanceToken.safeTransfer(msg.sender, _amount);
         emit TokensUnstaked(msg.sender, _amount);
@@ -56,26 +49,14 @@ contract LCTGovernance {
     function createProposal(string memory _description) external {
         uint256 proposalId = proposals.length;
         proposals.push(
-            Proposal({
-                id: proposalId,
-                description: _description,
-                forVotes: 0,
-                againstVotes: 0,
-                proposer: msg.sender
-            })
+            Proposal({id: proposalId, description: _description, forVotes: 0, againstVotes: 0, proposer: msg.sender})
         );
         emit ProposalCreated(proposalId, msg.sender);
     }
 
     function voteOnProposal(uint256 _proposalId, bool _support) external {
-        require(
-            stakedBalances[msg.sender] >= minimumStake,
-            "Insufficient stake to vote"
-        );
-        require(
-            !hasVoted[_proposalId][msg.sender],
-            "Already voted on this proposal"
-        );
+        require(stakedBalances[msg.sender] >= minimumStake, "Insufficient stake to vote");
+        require(!hasVoted[_proposalId][msg.sender], "Already voted on this proposal");
         require(_proposalId < proposals.length, "Invalid proposal ID");
 
         hasVoted[_proposalId][msg.sender] = true;
