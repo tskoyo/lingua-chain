@@ -35,7 +35,7 @@ app.post('/api/encrypted_word',async(req,res)=>{
         await new_ew.save();
         res.json(new_ew);
     } catch(err){
-        res.status(400).json({message:"error, can't save word",error:err});
+        res.status(403).json({message:"error, can't save word",error:err});
         }
     });
 
@@ -45,7 +45,7 @@ app.get('/api/encrypted_word',async(req,res)=>{
         const encrypted_words=await ew.find();
         res.json(encrypted_words);
     } catch(err){
-        res.status(400).json({message:"error, can't get words",error:err});
+        res.status(403).json({message:"error, can't get words",error:err});
     }
 });
 
@@ -59,7 +59,7 @@ app.post('/api/proposal',async(req,res)=>{
         await new_proposal.save();
         res.json(new_proposal);
     } catch(err){
-        res.status(400).json({message:"error can't save proposal",error:err});
+        res.status(403).json({message:"error can't save proposal",error:err});
     }
     });
     
@@ -69,7 +69,7 @@ app.get("/api/proposal",async(req,res)=>{
         const proposals=await proposal.find();
         res.json(proposals);
     }catch(err){
-        res.status(400).json({message:"error, can't get proposals",error:err});
+        res.status(403).json({message:"error, can't get proposals",error:err});
     }
 });
 
@@ -83,7 +83,7 @@ app.post("/api/permission",async(req,res)=>{
         await new_permit.save();
         res.json(new_permit);
     } catch(err){
-        res.status(400).json({message:"Error, can't save permission",error:err});
+        res.status(403).json({message:"Error, can't save permission",error:err});
     }
 });
 

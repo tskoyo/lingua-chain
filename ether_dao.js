@@ -28,12 +28,14 @@ contract.on('ProposalCreated',async (proposal_id,proposal_data)=>{
 
 //store in database
 const proposal=require('./api/proposal');
+
+
 try{
     const new_proposal=new proposal({
         encrypted_data:Buffer.from(proposal_data),
         onchain_proposal_id:proposal_id,
         status:'pending',
-        created_by: '0x propsoer address'
+        created_by: '0x proposer address'
     });
     await new_proposal.save();
     console.log('proposal saved');
@@ -47,9 +49,10 @@ contract.on('ProposalPassed', async (proposal_id)=>{
     console.log(`ProposalPassed: id= ${proposal_id}`);
 
     try {
-        const proposal=await proposal.findOne(
+        const proposal=await proposal.findOneAndUpdate(
             {onchain_proposal_id:proposal_id},
-            {status:'approved'});
+            {status:'approved'},
+            {new: true});
 
     } catch (err) {
         console.log('error updating proposal', err);
