@@ -49,19 +49,7 @@ app.get('/api/encrypted_word',async(req,res)=>{
     }
 });
 
-const proposal=require('./api/proposal');
 
-//create a proposal
-app.post('/api/proposal',async(req,res)=>{
-    try{
-        const {encrypted_data,onchain_proposal_id,created_by}=req.body;
-        const new_proposal=new proposal({encrypted_data,onchain_proposal_id,created_by});
-        await new_proposal.save();
-        res.json(new_proposal);
-    } catch(err){
-        res.status(403).json({message:"error can't save proposal",error:err});
-    }
-    });
     
 //get all proposals
 app.get("/api/proposal",async(req,res)=>{
