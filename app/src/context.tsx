@@ -9,7 +9,7 @@ import {
 import { ethers } from "ethers";
 import contractArtifact from "../../out/LCTGovernance.sol/LCTGovernance.json";
 
-const daoAddress = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9";
+const daoAddress = "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c";
 
 //
 // import { useErrorBoundary } from "react-error-boundary";
@@ -62,8 +62,6 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
         contractArtifact.abi,
         tempSigner,
       );
-
-      console.log(contract);
 
       setWeb3State((prevState) => ({
         ...prevState,

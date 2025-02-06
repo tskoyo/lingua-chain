@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { z } from "zod";
 import { useWeb3 } from "./context";
+import type { AddProposal } from "./App";
 
 const formSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
@@ -13,14 +14,14 @@ type ProposalFormP = {
 };
 
 export const ProporsalForm = ({ addProposal, close }: ProposalFormP) => {
-  const { account, contract } = useWeb3();
+  const { contract } = useWeb3();
 
   const [formData, setFormData] = useState({ title: "", description: "" });
   const [errors, setErrors] = useState({ title: "", description: "" });
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => setFormData({ ...formData, [event.target.name]: event.target.value });
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const result = formSchema.safeParse(formData);
     if (!result.success) {
@@ -33,9 +34,13 @@ export const ProporsalForm = ({ addProposal, close }: ProposalFormP) => {
     }
     setErrors({ title: "", description: "" });
 
-    contract
-      ?.createProposal(formData.title, formData.description)
-      .then(addProposal);
+    await contract?.createProposal(formData.title, formData.description);
+
+    addProposal({
+      id: formData.title.length,
+      name: formData.title,
+      description: formData.description,
+    });
 
     close();
   };

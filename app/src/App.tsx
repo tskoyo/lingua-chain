@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { PROPOSALS } from "./data";
+import { useEffect, useState } from "react";
 import ProporsalForm from "./ProposalForm";
 import VotingForm from "./VotingForm";
 import Header from "./Header";
+import { useWeb3 } from "./context";
 
 interface Proposal {
   id: number;
-  title: string;
+  name: string;
   description: string;
 }
 
@@ -16,8 +16,25 @@ export enum Vote {
   Abstain = "abstain",
 }
 
+const format = (data) =>
+  data
+    .map((p: any) => ({
+      id: p[0],
+      name: p[1],
+      description: p[2],
+      // forVotes: p[3].toNumber(),
+      // againstVotes: p[4].toNumber(),
+      proposer: p[5],
+    }))
+    .reverse();
+
 export default function ProposalsList() {
-  const [proposals, setProposals] = useState<Proposal[]>(PROPOSALS);
+  const [proposals, setProposals] = useState<Proposal[]>([]);
+  const { contract } = useWeb3();
+
+  useEffect(() => {
+    contract?.getAllProposals().then(format).then(setProposals);
+  }, [contract]);
 
   const addProposal = (proposal: Proposal) =>
     setProposals((prev) => [proposal, ...prev]);
@@ -26,15 +43,15 @@ export default function ProposalsList() {
     <div className="min-h-dvh grid grid-rows-[min-content_1fr] h-full">
       <Header />
       <div className="bg-linear-to-t from-cyan-900 to-gray-900 fixed top-0 z-1 h-full w-full" />
-      <main className="container grid grid-rows-[min-content_1fr] mx-auto z-2 h-full">
+      <main className="container grid grid-rows-[min-content_1fr] mx-auto z-2 h-full py-10">
         <div className="-ml-1 mb-4 text-4xl font-black h-13 font-semibold text-white mt-10 flex justify-between">
           <h1>Proposals</h1>
           <AddButton addProposal={addProposal} />
         </div>
         <div className="border-x shadow-3xl border-t border-gray-500 w-full bg-gray-900 rounded-xs">
           <div className="divide-gray-700 divide-y-1 px-6">
-            {proposals.map((proposal, key) => (
-              <Proposal {...proposal} key={key} />
+            {proposals.map((proposal) => (
+              <Proposal {...proposal} key={proposal.id} />
             ))}
           </div>
         </div>
@@ -119,13 +136,13 @@ const VotingButtons = () => {
   );
 };
 
-const Proposal = ({ id, title, description }: Proposal) => {
+const Proposal = ({ id, name, description }: Proposal) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
     <div key={id} className="py-3.5 text-white">
       <div className="flex justify-between">
-        <h2 className="text-lg font-semibold">{title}</h2>
+        <h2 className="text-lg font-semibold">{name}</h2>
         <VotingButtons />
       </div>
       <div className="mt-4 inline-grid grid-cols-[1fr_max_content] grid-flow-col justify-between w-full">
