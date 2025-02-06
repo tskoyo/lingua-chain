@@ -1,4 +1,20 @@
 import { useWeb3 } from "./context";
+import { useMemo, HTMLAttributes } from "react";
+import { minidenticon } from "minidenticons";
+
+type MinidenticonP = { username: string } & HTMLAttributes<HTMLImageElement>;
+
+export const Avatar = ({ username }: MinidenticonP) => {
+  const svg = useMemo(() => minidenticon(username), [username]);
+
+  return (
+    <img
+      className="bg-gray-900 w-10 h-10 rounded-full"
+      src={"data:image/svg+xml;utf8," + svg}
+      alt="avatar"
+    />
+  );
+};
 
 const Header = () => {
   const { account, connectWallet, tokens } = useWeb3();
@@ -15,11 +31,7 @@ const Header = () => {
         <div className="flex gap-4 items-center">
           <span>Balance: {tokens}</span>
           <div className="bg-gray-700 flex items-center gap-4 rounded-full p-1">
-            <img
-              src="https://i.pravatar.cc/40"
-              alt="avatar"
-              className="w-10 h-10 rounded-full"
-            />
+            <Avatar username={account} />
             <span className="text-white mr-4">{truncatedAddress}</span>
           </div>
         </div>
