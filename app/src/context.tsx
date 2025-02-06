@@ -10,11 +10,8 @@ import { ethers } from "ethers";
 import contractArtifact from "../../out/LCTGovernance.sol/LCTGovernance.json";
 import tokensArtifact from "../../out/LCToken.sol/LCToken.json";
 
-const daoAddress = "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c";
-const tokensAddress = "0x68B1D87F95878fE05B998F19b66F4baba5De1aed";
-
-//
-// import { useErrorBoundary } from "react-error-boundary";
+const daoAddress = "0x809d550fca64d94Bd9F66E60752A544199cfAC3D";
+const tokensAddress = "0x36C02dA8a0983159322a80FFE9F24b1acfF8B570";
 
 interface Web3State {
   provider: ethers.BrowserProvider | null;

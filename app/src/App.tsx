@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import ProporsalForm from "./ProposalForm";
-import VotingForm from "./VotingForm";
 import Header from "./Header";
 import { useWeb3 } from "./context";
 
@@ -89,6 +88,7 @@ const ClosePseudoButton = ({ close }: { close: () => void }) => (
 );
 
 export const AddButton = ({ addProposal }: FormButtonP) => {
+  const { account } = useWeb3();
   const [shown, setShowForm] = useState(false);
 
   const close = () => setShowForm(false);
@@ -96,6 +96,7 @@ export const AddButton = ({ addProposal }: FormButtonP) => {
   return (
     <>
       <button
+        disabled={!account}
         className={`mt-1 px-6 grid place-items-center border-2 border-gray-400 rounded-xs`}
         onClick={() => setShowForm(true)}
       >
@@ -113,43 +114,55 @@ export const AddButton = ({ addProposal }: FormButtonP) => {
   );
 };
 
-const buttonStyle = (visible: boolean) =>
-  `w-9 h-9 grid place-items-center rounded-full border-2 ${visible ? "" : "pointer-events-none in"}visible`;
-const VotingButtons = () => {
-  const [vote, setVote] = useState<Vote | undefined>(undefined);
+const buttonStyle = `w-9 h-9 grid place-items-center rounded-full border-2`;
+const VotingButtons = ({ id }: { id: number }) => {
+  const { account } = useWeb3();
+  const [vote, setVote] = useState<boolean | null>(null);
 
-  const close = () => setVote(undefined);
+  const disabled = !account || vote !== null;
+
+  const voteFor = async () => {
+    try {
+      // await contract?.voteOnProposal(id, true);
+      setVote(true);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const voteAgainst = async () => {
+    try {
+      // await contract?.voteOnProposal(id, false);
+      setVote(false);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <div className="flex gap-3 items-center">
       <button
-        className={`${buttonStyle(vote !== Vote.For)} border-green-800 text-green-800`}
-        onClick={() => setVote(Vote.For)}
+        disabled={disabled}
+        className={`${buttonStyle} border-green-800 text-green-800 ${vote !== null && vote === false ? "invisible" : ""}`}
+        onClick={voteFor}
       >
         <For />
       </button>
       <button
-        className={`${buttonStyle(vote !== Vote.Against)} border-red-800 text-red-800`}
-        onClick={() => setVote(Vote.Against)}
+        disabled={disabled}
+        className={`${buttonStyle} border-red-800 text-red-800 ${vote !== null && vote === true ? "invisible" : ""}`}
+        onClick={voteAgainst}
       >
         <Against />
       </button>
-      {vote && (
-        <div className="fixed inset-0 bg-black/60 bg-opacity-20 flex items-center justify-center z-50">
-          <div className="relative min-w-75">
-            <VotingForm vote={vote} close={close} />
-            <ClosePseudoButton close={close} />
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
 const Proposal = (p: Proposal) => {
-  const { id, name, description, forVotes, againstVotes, proposer } = p;
+  const { name, description, forVotes, againstVotes, proposer } = p;
   return (
-    <div key={id} className="py-3.5 text-white">
+    <div className="py-3.5 text-white">
       <div className="flex justify-between">
         <div>
           <h2 className="text-lg font-semibold">{name}</h2>
@@ -157,7 +170,7 @@ const Proposal = (p: Proposal) => {
           <p className="text-gray-300 mt-3">{description}</p>
         </div>
         <div>
-          <VotingButtons />
+          <VotingButtons id={p.id} />
           <Scale forVotes={forVotes} againstVotes={againstVotes} />
         </div>
       </div>

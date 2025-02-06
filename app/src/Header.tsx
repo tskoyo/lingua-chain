@@ -12,17 +12,17 @@ const Header = () => {
         lingua-chain
       </div>
       {account ? (
-        <>
-          <span>LCT: {tokens}</span>
-          <div className="flex items-center gap-4">
+        <div className="flex gap-4 items-center">
+          <span>Balance: {tokens}</span>
+          <div className="bg-gray-700 flex items-center gap-4 rounded-full p-1">
             <img
               src="https://i.pravatar.cc/40"
               alt="avatar"
               className="w-10 h-10 rounded-full"
             />
-            <span className="text-white">{truncatedAddress}</span>
+            <span className="text-white mr-4">{truncatedAddress}</span>
           </div>
-        </>
+        </div>
       ) : (
         <button
           onClick={connectWallet}
