@@ -12,11 +12,6 @@ interface Proposal {
   proposer: string;
 }
 
-export enum Vote {
-  For = "for",
-  Against = "against",
-}
-
 const format = (data) =>
   data.map((p: any) => ({
     id: Number(p[0]),
