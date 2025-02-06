@@ -8,8 +8,10 @@ import {
 } from "react";
 import { ethers } from "ethers";
 import contractArtifact from "../../out/LCTGovernance.sol/LCTGovernance.json";
+import tokensArtifact from "../../out/LCToken.sol/LCToken.json";
 
 const daoAddress = "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c";
+const tokensAddress = "0x68B1D87F95878fE05B998F19b66F4baba5De1aed";
 
 //
 // import { useErrorBoundary } from "react-error-boundary";
@@ -19,6 +21,7 @@ interface Web3State {
   signer: ethers.Signer | null;
   account: string | null;
   contract: ethers.Contract | null;
+  tokens: number | null;
 }
 
 interface Web3ContextProps extends Web3State {
@@ -31,6 +34,7 @@ export const Web3Context = createContext<Web3ContextProps>({
   account: null,
   connectWallet: async () => {},
   contract: null,
+  tokens: null,
 });
 
 export const Web3Provider = ({ children }: { children: ReactNode }) => {
@@ -39,6 +43,7 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
     signer: null,
     account: null,
     contract: null,
+    tokens: null,
   });
 
   // const { showBoundary } = useErrorBoundary();
@@ -63,12 +68,19 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
         tempSigner,
       );
 
+      const tokens = await new ethers.Contract(
+        tokensAddress,
+        tokensArtifact.abi,
+        tempSigner,
+      ).balanceOf(address);
+
       setWeb3State((prevState) => ({
         ...prevState,
         provider: tempProvider,
         signer: tempSigner,
         account: address,
         contract,
+        tokens: Number(tokens),
       }));
 
       window.ethereum.on("accountsChanged", handleAccountsChanged);

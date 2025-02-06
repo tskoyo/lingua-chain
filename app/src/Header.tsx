@@ -1,7 +1,7 @@
 import { useWeb3 } from "./context";
 
 const Header = () => {
-  const { account, connectWallet } = useWeb3();
+  const { account, connectWallet, tokens } = useWeb3();
   const truncatedAddress = account
     ? account.slice(0, 5) + ".." + account.slice(-3)
     : "";
@@ -12,14 +12,17 @@ const Header = () => {
         lingua-chain
       </div>
       {account ? (
-        <div className="flex items-center gap-4">
-          <img
-            src="https://i.pravatar.cc/40"
-            alt="avatar"
-            className="w-10 h-10 rounded-full"
-          />
-          <span className="text-white">{truncatedAddress}</span>
-        </div>
+        <>
+          <span>LCT: {tokens}</span>
+          <div className="flex items-center gap-4">
+            <img
+              src="https://i.pravatar.cc/40"
+              alt="avatar"
+              className="w-10 h-10 rounded-full"
+            />
+            <span className="text-white">{truncatedAddress}</span>
+          </div>
+        </>
       ) : (
         <button
           onClick={connectWallet}

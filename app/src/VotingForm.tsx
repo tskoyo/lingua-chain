@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { z } from "zod";
 import { Vote } from "./App";
+import { useWeb3 } from "./context";
 
 const formSchema = z.object({
   range: z.number().min(0, { message: "Couldn't be zero" }),
@@ -12,6 +13,8 @@ type ProposalFormP = {
 };
 
 export const VotingForm = ({ vote, close }: ProposalFormP) => {
+  const { tokens, contract } = useWeb3();
+
   // const [formData, setFormData] = useState({ title: "", description: "" });
   const [errors, setErrors] = useState({ range: "" });
   const [range, setRange] = useState(0);
@@ -56,7 +59,7 @@ export const VotingForm = ({ vote, close }: ProposalFormP) => {
         <input
           type="range"
           min="0"
-          max="100"
+          max={tokens ?? 0}
           value={range}
           onChange={(event) => setRange(Number(event.target.value))}
           className="w-full h-2 bg-gray-900 rounded-lg appearance-none cursor-pointer"

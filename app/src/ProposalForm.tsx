@@ -14,7 +14,7 @@ type ProposalFormP = {
 };
 
 export const ProporsalForm = ({ addProposal, close }: ProposalFormP) => {
-  const { contract } = useWeb3();
+  const { contract, account } = useWeb3();
 
   const [formData, setFormData] = useState({ title: "", description: "" });
   const [errors, setErrors] = useState({ title: "", description: "" });
@@ -36,11 +36,7 @@ export const ProporsalForm = ({ addProposal, close }: ProposalFormP) => {
 
     await contract?.createProposal(formData.title, formData.description);
 
-    addProposal({
-      id: formData.title.length,
-      name: formData.title,
-      description: formData.description,
-    });
+    addProposal({ name: formData.title, description: formData.description });
 
     close();
   };

@@ -8,36 +8,50 @@ interface Proposal {
   id: number;
   name: string;
   description: string;
+  forVotes: number;
+  againstVotes: number;
+  proposer: string;
 }
 
 export enum Vote {
   For = "for",
   Against = "against",
-  Abstain = "abstain",
 }
 
 const format = (data) =>
-  data
-    .map((p: any) => ({
-      id: p[0],
-      name: p[1],
-      description: p[2],
-      // forVotes: p[3].toNumber(),
-      // againstVotes: p[4].toNumber(),
-      proposer: p[5],
-    }))
-    .reverse();
+  data.map((p: any) => ({
+    id: Number(p[0]),
+    name: p[1],
+    description: p[2],
+    forVotes: Number(p[3]),
+    againstVotes: Number(p[4]),
+    proposer: p[5],
+  }));
 
 export default function ProposalsList() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
-  const { contract } = useWeb3();
+  const { contract, account } = useWeb3();
+
+  console.log(proposals);
 
   useEffect(() => {
     contract?.getAllProposals().then(format).then(setProposals);
   }, [contract]);
 
-  const addProposal = (proposal: Proposal) =>
-    setProposals((prev) => [proposal, ...prev]);
+  const addOptimisticProposal: AddProposal = (
+    proposal: Pick<Proposal, "name" | "description">,
+  ) => {
+    setProposals((prev) => [
+      ...prev,
+      {
+        ...proposal,
+        forVotes: 0,
+        againstVotes: 0,
+        id: prev.length,
+        proposer: account ?? "",
+      },
+    ]);
+  };
 
   return (
     <div className="min-h-dvh grid grid-rows-[min-content_1fr] h-full">
@@ -46,10 +60,10 @@ export default function ProposalsList() {
       <main className="container grid grid-rows-[min-content_1fr] mx-auto z-2 h-full py-10">
         <div className="-ml-1 mb-4 text-4xl font-black h-13 font-semibold text-white mt-10 flex justify-between">
           <h1>Proposals</h1>
-          <AddButton addProposal={addProposal} />
+          <AddButton addProposal={addOptimisticProposal} />
         </div>
         <div className="border-x shadow-3xl border-t border-gray-500 w-full bg-gray-900 rounded-xs">
-          <div className="divide-gray-700 divide-y-1 px-6">
+          <div className="flex flex-col-reverse divide-gray-700 divide-y-1 divide-y-reverse px-6">
             {proposals.map((proposal) => (
               <Proposal {...proposal} key={proposal.id} />
             ))}
@@ -61,7 +75,9 @@ export default function ProposalsList() {
 }
 
 export type FormButtonP = { addProposal: AddProposal };
-export type AddProposal = (proposal: Proposal) => void;
+export type AddProposal = (
+  proposal: Pick<Proposal, "name" | "description">,
+) => void;
 
 const ClosePseudoButton = ({ close }: { close: () => void }) => (
   <button
@@ -118,12 +134,6 @@ const VotingButtons = () => {
       >
         <Against />
       </button>
-      <button
-        className={`${buttonStyle(vote !== Vote.Abstain)} border-gray-500 text-gray-500`}
-        onClick={() => setVote(Vote.Abstain)}
-      >
-        <span className="text-3xl -mt-2">-</span>
-      </button>
       {vote && (
         <div className="fixed inset-0 bg-black/60 bg-opacity-20 flex items-center justify-center z-50">
           <div className="relative min-w-75">
@@ -136,24 +146,51 @@ const VotingButtons = () => {
   );
 };
 
-const Proposal = ({ id, name, description }: Proposal) => {
-  const [expanded, setExpanded] = useState(false);
-
+const Proposal = (p: Proposal) => {
+  const { id, name, description, forVotes, againstVotes, proposer } = p;
   return (
     <div key={id} className="py-3.5 text-white">
       <div className="flex justify-between">
-        <h2 className="text-lg font-semibold">{name}</h2>
-        <VotingButtons />
+        <div>
+          <h2 className="text-lg font-semibold">{name}</h2>
+          <div className=" text-gray-700 text-xs">By: {proposer}</div>
+          <p className="text-gray-300 mt-3">{description}</p>
+        </div>
+        <div>
+          <VotingButtons />
+          <Scale forVotes={forVotes} againstVotes={againstVotes} />
+        </div>
       </div>
-      <div className="mt-4 inline-grid grid-cols-[1fr_max_content] grid-flow-col justify-between w-full">
-        <p className={`text-gray-300  ${expanded ? "" : "truncate"}`}>
-          {description}
-        </p>
-        {!expanded && (
-          <button className="ml-4" onClick={() => setExpanded(true)}>
-            (read more)
-          </button>
-        )}
+    </div>
+  );
+};
+
+const Scale = ({
+  forVotes,
+  againstVotes,
+}: {
+  forVotes: number;
+  againstVotes: number;
+}) => {
+  const totalVotes = forVotes + againstVotes;
+  const forPercentage = totalVotes ? (forVotes / totalVotes) * 100 : 1;
+  const againstPercentage = totalVotes ? (againstVotes / totalVotes) * 100 : 1;
+
+  return (
+    <div className="mt-4">
+      <div className="relative w-full h-1 bg-gray-700 rounded-lg overflow-hidden">
+        <div
+          className="absolute top-0 left-0 h-full bg-green-500"
+          style={{ width: `${forPercentage}%` }}
+        />
+        <div
+          className="absolute top-0 right-0 h-full bg-red-500"
+          style={{ width: `${againstPercentage}%` }}
+        />
+      </div>
+      <div className="flex justify-between text-xs mt-1 text-gray-400">
+        <span>{forVotes}</span>
+        <span>{againstVotes}</span>
       </div>
     </div>
   );
