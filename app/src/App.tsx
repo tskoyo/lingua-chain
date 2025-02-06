@@ -26,8 +26,6 @@ export default function ProposalsList() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const { contract, account } = useWeb3();
 
-  console.log(proposals);
-
   useEffect(() => {
     contract?.getAllProposals().then(format).then(setProposals);
   }, [contract]);
@@ -111,24 +109,16 @@ export const AddButton = ({ addProposal }: FormButtonP) => {
 
 const buttonStyle = `w-9 h-9 grid place-items-center rounded-full border-2`;
 const VotingButtons = ({ id }: { id: number }) => {
-  const { account } = useWeb3();
+  const { account, contract } = useWeb3();
   const [vote, setVote] = useState<boolean | null>(null);
 
   const disabled = !account || vote !== null;
 
-  const voteFor = async () => {
+  const castVote = (v: boolean) => async () => {
     try {
-      // await contract?.voteOnProposal(id, true);
-      setVote(true);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const voteAgainst = async () => {
-    try {
-      // await contract?.voteOnProposal(id, false);
-      setVote(false);
+      const result = await contract?.voteOnProposal(id, v);
+      console.log(result);
+      setVote(v);
     } catch (e) {
       console.error(e);
     }
@@ -139,14 +129,14 @@ const VotingButtons = ({ id }: { id: number }) => {
       <button
         disabled={disabled}
         className={`${buttonStyle} border-green-800 text-green-800 ${vote !== null && vote === false ? "invisible" : ""}`}
-        onClick={voteFor}
+        onClick={castVote(true)}
       >
         <For />
       </button>
       <button
         disabled={disabled}
         className={`${buttonStyle} border-red-800 text-red-800 ${vote !== null && vote === true ? "invisible" : ""}`}
-        onClick={voteAgainst}
+        onClick={castVote(false)}
       >
         <Against />
       </button>
