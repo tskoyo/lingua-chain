@@ -1,0 +1,23 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      minidenticons:
+        specifier: ^4.2.1
+        version: 4.2.1
+
+packages:
+
+  minidenticons@4.2.1:
+    resolution: {integrity: sha512-oWfFivA0lOx/V/bO/YIJbthB26lV8JXYvhnv9zM2hNd3fzsHTXQ6c6bWZPcvhD3nnOB+lQk/D9lF43BXixrN8g==}
+    engines: {node: '>=15.14.0'}
+
+snapshots:
+
+  minidenticons@4.2.1: {}
